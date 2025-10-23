@@ -5,6 +5,7 @@ import psycopg2
 import time
 import random
 import pickle
+import tempfile
 from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
 from aiogram import Bot, Dispatcher, types
@@ -31,9 +32,13 @@ MAX_REQUESTS_PER_MINUTE = int(os.getenv("MAX_REQUESTS_PER_MINUTE", "3"))
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
 cl = Client()
-cl.delay_range = [0, 0]  # delay yo‘q
+cl.delay_range = [0, 0]
 
-LOG_FILE = "logs.txt"
+# Temp directory for Railway
+TEMP_DIR = tempfile.gettempdir()
+LOG_FILE = os.path.join(TEMP_DIR, "logs.txt")
+CACHE_DIR = os.path.join(TEMP_DIR, "cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 # ---------------- Logger ----------------
 def log(text: str):
@@ -141,7 +146,7 @@ def increment_request(user_id):
 
 # ---------------- Instagram login ----------------
 def insta_login():
-    session_file = "session.json"
+    session_file = os.path.join(TEMP_DIR, "session.json")
     try:
         if os.path.exists(session_file):
             log("Session fayl topildi, yuklanmoqda...")
@@ -152,7 +157,7 @@ def insta_login():
                 log("Instagram sessiya orqali login muvaffaqiyatli!")
                 return True
             except LoginRequired:
-                log("Session eskirgan. O‘chirilyapti...")
+                log("Session eskirgan. O'chirilyapti...")
                 os.remove(session_file)
 
         log("Yangi login amalga oshirilmoqda...")
@@ -189,19 +194,18 @@ async def safe_edit(msg_obj, text):
 
 # ---------------- Tez media yuklash + kesh ----------------
 async def fetch_medias_fast(username_input, user_id_ig, total):
-    os.makedirs("cache", exist_ok=True)
-    cache_file = os.path.join("cache", f"{username_input}.pkl")
+    cache_file = os.path.join(CACHE_DIR, f"{username_input}.pkl")
 
-    # Keshdan o‘qish
+    # Keshdan o'qish
     if os.path.exists(cache_file):
         try:
             with open(cache_file, "rb") as f:
                 cached = pickle.load(f)
                 if cached and len(cached) >= total:
-                    log(f"Keshdan o‘qildi: {username_input} ({len(cached)} ta post)")
+                    log(f"Keshdan o'qildi: {username_input} ({len(cached)} ta post)")
                     return cached[:total]
         except Exception as e:
-            log(f"Kesh o‘qishda xato: {e}")
+            log(f"Kesh o'qishda xato: {e}")
 
     # Parallel yuklash
     step = 30
@@ -238,7 +242,7 @@ async def start(message: types.Message):
             reply_markup=keyboard
         )
         return
-    await message.reply("✅ Siz ro‘yxatdan o‘tgan ekansiz. Endi username yuboring (masalan: ummmusfira).")
+    await message.reply("✅ Siz ro'yxatdan o'tgan ekansiz. Endi username yuboring (masalan: ummmusfira).")
 
 @dp.message_handler(content_types=types.ContentType.CONTACT)
 async def contact_handler(message: types.Message):
@@ -246,26 +250,26 @@ async def contact_handler(message: types.Message):
     phone_number = message.contact.phone_number
     username = message.from_user.username or "Foydalanuvchi"
     create_user(user_id, username, phone_number)
-    await message.reply("🎉 Ro‘yxatdan o‘tdingiz! Endi username yuboring.", reply_markup=types.ReplyKeyboardRemove())
+    await message.reply("🎉 Ro'yxatdan o'tdingiz! Endi username yuboring.", reply_markup=types.ReplyKeyboardRemove())
 
 @dp.message_handler()
 async def analyze_user(message: types.Message):
     user_id = message.from_user.id
     username_input = message.text.strip().lstrip('@')
     if not username_input or ' ' in username_input:
-        await message.reply("❗ To‘g‘ri username kiriting, masalan: ummmusfira")
+        await message.reply("❗ To'g'ri username kiriting, masalan: ummmusfira")
         return
 
     # foydalanuvchini tekshirish
     user = get_user(user_id)
     if not user or not user.get("phone_number"):
-        await message.reply("📞 Avval /start ni bosib ro‘yxatdan o‘ting.")
+        await message.reply("📞 Avval /start ni bosib ro'yxatdan o'ting.")
         return
 
     check_reset_needed(user_id)
     remaining = user['requests_limit'] - user['requests_used']
     if remaining <= 0:
-        await message.reply("❌ Kunlik limit tugagan. Ertaga urinib ko‘ring.")
+        await message.reply("❌ Kunlik limit tugagan. Ertaga urinib ko'ring.")
         return
 
     can_request, _ = rate_limiter.can_make_request()
@@ -323,10 +327,11 @@ async def analyze_user(message: types.Message):
         media_list.sort(key=lambda x: x['score'], reverse=True)
         top_50 = media_list[:50]
 
-        filename = f"{username_input}_top50.csv"
+        # Temp faylda saqlash
+        filename = os.path.join(TEMP_DIR, f"{username_input}_top50.csv")
         with open(filename, "w", newline='', encoding='utf-8-sig') as f:
             writer = csv.writer(f)
-            writer.writerow(["Rank", "Link", "Ko‘rishlar", "Layklar", "Kommentlar", "Viral (%)", "Score", "Turi", "Sana", "Tavsif"])
+            writer.writerow(["Rank", "Link", "Ko'rishlar", "Layklar", "Kommentlar", "Viral (%)", "Score", "Turi", "Sana", "Tavsif"])
             for i, item in enumerate(top_50, 1):
                 m = item['media']
                 virality = calculate_virality(item['likes'], item['comments'], item['views'])
@@ -344,13 +349,18 @@ async def analyze_user(message: types.Message):
 
         await message.reply_document(
             InputFile(filename),
-            caption=f"✅ TOP {len(top_50)} @{username_input}\n📊 {len(medias)} postdan tanlandi\nQolgan so‘rovlar: {remain}/{new_user['requests_limit']}"
+            caption=f"✅ TOP {len(top_50)} @{username_input}\n📊 {len(medias)} postdan tanlandi\nQolgan so'rovlar: {remain}/{new_user['requests_limit']}"
         )
-        os.remove(filename)
+        
+        # Faylni o'chirish
+        try:
+            os.remove(filename)
+        except:
+            pass
 
     except Exception as e:
         log(f"analyze_user error ({username_input}): {e}")
-        await message.reply("⚙️ Bot vaqtincha nosoz. Keyinroq urinib ko‘ring.")
+        await message.reply("⚙️ Bot vaqtincha nosoz. Keyinroq urinib ko'ring.")
 
 # ---------------- Run ----------------
 if __name__ == '__main__':
@@ -360,4 +370,3 @@ if __name__ == '__main__':
     log("Bot ishga tushdi.")
     print("🤖 Bot ishga tushdi...")
     asyncio.run(dp.start_polling(bot))
-
