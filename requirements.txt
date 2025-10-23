@@ -1,5 +1,5 @@
 aiogram==2.25.1
-aiohttp==3.8.6
+aiohttp==3.8.3
 instagrapi==1.18.5
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
