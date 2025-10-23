@@ -1,0 +1,140 @@
+[2025-10-21 17:45:15] Session fayl topildi, yuklanmoqda...
+[2025-10-21 17:45:23] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-21 17:45:23] 🤖 Bot ishga tushdi.
+[2025-10-21 19:04:01] analyze_user xatosi: 
+[2025-10-21 21:32:44] /start handler xatosi: 
+[2025-10-21 21:32:44] analyze_user xatosi: 
+[2025-10-22 10:12:15] Session fayl topildi, yuklanmoqda...
+[2025-10-22 10:12:19] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 10:12:19] 🤖 Bot ishga tushdi.
+[2025-10-22 10:14:04] Session fayl topildi, yuklanmoqda...
+[2025-10-22 10:14:12] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 10:14:12] 🤖 Bot ishga tushdi.
+[2025-10-22 11:33:01] Session fayl topildi, yuklanmoqda...
+[2025-10-22 11:33:10] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 11:33:10] Bot ishga tushdi.
+[2025-10-22 11:43:42] 📦 Session fayl topildi, yuklanmoqda...
+[2025-10-22 11:43:45] ✅ Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 11:48:17] 📦 Session fayl topildi, yuklanmoqda...
+[2025-10-22 11:48:20] ✅ Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 11:48:20] Bot ishga tushdi.
+[2025-10-22 11:52:07] 📦 Session fayl topildi, yuklanmoqda...
+[2025-10-22 11:52:10] ✅ Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 11:58:01] Session fayl topildi, yuklanmoqda...
+[2025-10-22 11:58:05] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 11:58:05] Bot ishga tushdi.
+[2025-10-22 14:45:19] 📦 Session fayl topildi, yuklanmoqda...
+[2025-10-22 14:45:24] ✅ Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 14:46:10] 📦 Session fayl topildi, yuklanmoqda...
+[2025-10-22 14:46:14] ✅ Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 14:47:02] Session fayl topildi, yuklanmoqda...
+[2025-10-22 14:47:10] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 14:47:10] Bot ishga tushdi.
+[2025-10-22 15:01:29] Session fayl topildi, yuklanmoqda...
+[2025-10-22 15:01:32] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 15:01:32] Bot ishga tushdi.
+[2025-10-22 15:02:42] Session fayl topildi, yuklanmoqda...
+[2025-10-22 15:02:45] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 15:02:45] Bot ishga tushdi.
+[2025-10-22 15:03:47] Kesh saqlandi: ummmusfira (3 ta post)
+[2025-10-22 15:06:00] Kesh saqlandi: marsatik (200 ta post)
+[2025-10-22 15:19:40] Bot ishga tushdi.
+[2025-10-22 15:21:59] Bot ishga tushdi.
+[2025-10-22 15:22:26] Foydalanuvchi topilmadi: ummmusfira
+[2025-10-22 15:23:10] Foydalanuvchi topilmadi: yasubiy.film
+[2025-10-22 15:28:55] Bot ishga tushdi.
+[2025-10-22 15:30:40] Non-JSON response from https://www.instagram.com/yasubiy.film/?__a=1&__d=dis (status 201)
+[2025-10-22 15:30:40] Foydalanuvchi ma'lumot topilmadi yoki javob noto'g'ri: yasubiy.film
+[2025-10-22 15:30:41] No medias for yasubiy.film
+[2025-10-22 15:31:12] Bot to'xtadi.
+[2025-10-22 15:37:58] Bot ishga tushdi.
+[2025-10-22 15:39:24] ⚠️ JSON parse bo‘lmadi: https://www.instagram.com/yasubiy.film/?__a=1&__d=dis
+[2025-10-22 15:39:25] ⚠️ JSON parse bo‘lmadi: https://www.instagram.com/yasubiy.film/?__a=1&__d=dis
+[2025-10-22 15:39:25] ⚠️ JSON parse bo‘lmadi: https://www.instagram.com/yasubiy.film/?__a=1&__d=dis
+[2025-10-22 15:39:25] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1 (status 200)
+[2025-10-22 15:39:26] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1 (status 200)
+[2025-10-22 15:39:27] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1 (status 200)
+[2025-10-22 15:39:27] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1&__d=1 (status 200)
+[2025-10-22 15:39:28] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1&__d=1 (status 200)
+[2025-10-22 15:39:29] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/?__a=1&__d=1 (status 200)
+[2025-10-22 15:39:30] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/ (status 200)
+[2025-10-22 15:39:31] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/ (status 200)
+[2025-10-22 15:39:32] ⚠️ HTML javob: https://www.instagram.com/yasubiy.film/ (status 200)
+[2025-10-22 15:39:32] ❌ Foydalanuvchi topilmadi yoki JSON bo‘sh: yasubiy.film
+[2025-10-22 15:39:32] No medias for yasubiy.film
+[2025-10-22 17:59:28] Bot to'xtadi.
+[2025-10-22 17:59:30] Session fayl topildi, yuklanmoqda...
+[2025-10-22 17:59:34] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 17:59:34] Bot ishga tushdi.
+[2025-10-22 18:00:07] Kesh saqlandi: yasubiy.film (10 ta post)
+[2025-10-22 18:00:41] Kesh saqlandi: yasubiy (6 ta post)
+[2025-10-22 18:01:17] Kesh saqlandi: musfir (140 ta post)
+[2025-10-22 18:01:45] analyze_user error (musfir.uz): User not found
+[2025-10-22 18:15:26] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:15:29] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:15:29] Bot ishga tushdi.
+[2025-10-22 18:16:26] Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:20:08] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:20:14] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:20:14] Bot ishga tushdi.
+[2025-10-22 18:20:24] Keshdan o‘qildi: ummmusfira (3 ta media)
+[2025-10-22 18:24:38] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:24:41] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:24:41] Bot ishga tushdi.
+[2025-10-22 18:24:55] Keshdan o‘qildi: ummmusfira (3 ta media)
+[2025-10-22 18:25:07] 3 ta media olindi (post+reels+igtv).
+[2025-10-22 18:25:07] Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:29:09] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:29:13] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:29:13] Bot ishga tushdi.
+[2025-10-22 18:29:27] user_feed orqali olishda xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:29:27] Kesh saqlandi: ummmusfira (0 ta media)
+[2025-10-22 18:29:38] user_feed orqali olishda xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:29:38] Kesh saqlandi: ummmusfira (0 ta media)
+[2025-10-22 18:36:51] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:36:55] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:36:55] Bot ishga tushdi.
+[2025-10-22 18:37:27] 3 ta Reels olindi.
+[2025-10-22 18:37:27] Post/feed olishda xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:37:27] Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:39:35] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:39:38] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:39:38] Bot ishga tushdi.
+[2025-10-22 18:39:54] 3 ta Reels olindi.
+[2025-10-22 18:39:54] Post olishda xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:39:54] Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:43:50] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:43:53] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:43:53] Bot ishga tushdi.
+[2025-10-22 18:44:36] user_feed xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:44:38] 3 ta Reels (clips) olindi.
+[2025-10-22 18:44:39] 0 ta pinned media topildi (GraphQL orqali).
+[2025-10-22 18:44:39] Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:48:36] Session fayl topildi, yuklanmoqda...
+[2025-10-22 18:48:39] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-22 18:48:39] Bot ishga tushdi.
+[2025-10-22 18:48:51] ❌ user_feed xato: 'Client' object has no attribute 'user_feed'
+[2025-10-22 18:48:53] 🎞️ 3 ta Reels (clips) olindi.
+[2025-10-22 18:48:54] 📌 0 ta pinned media topildi (GraphQL orqali).
+[2025-10-22 18:48:54] 💾 Kesh saqlandi: ummmusfira (3 ta media)
+[2025-10-22 18:48:54] ✅ Yakuniy: 3 ta media (Post + Reels + Pinned) tayyor.
+[2025-10-22 18:59:14] Bot ishga tushdi.
+[2025-10-22 18:59:41] analyze_user error (ummmusfira): JSON Query to graphql/query: 401 Unauthorized - "fail" status, message "Please wait a few minutes before you try again." when accessing https://www.instagram.com/graphql/query?variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22ummmusfira%22%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Afalse%7D&doc_id=7898261790222653&server_timestamps=true
+[2025-10-22 19:05:30] Bot ishga tushdi.
+[2025-10-22 19:05:52] Instaloader login qilindi va sessiya saqlandi (yangi).
+[2025-10-22 19:05:58] Postlar olinayotganda xato: JSON Query to graphql/query: 401 Unauthorized - "fail" status, message "Please wait a few minutes before you try again." when accessing https://www.instagram.com/graphql/query?variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22ummmusfira%22%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Afalse%7D&doc_id=7898261790222653&server_timestamps=true
+[2025-10-22 19:05:58] Kesh saqlandi: ummmusfira (0 ta media)
+[2025-10-22 19:15:30] Bot ishga tushdi.
+[2025-10-22 19:15:41] Instaloader sessiya fayli yuklandi.
+[2025-10-22 19:15:47] Postlar olinayotganda xato: JSON Query to graphql/query: 401 Unauthorized - "fail" status, message "Please wait a few minutes before you try again." when accessing https://www.instagram.com/graphql/query?variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22ummmusfira%22%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Afalse%7D&doc_id=7898261790222653&server_timestamps=true
+[2025-10-22 19:15:47] Kesh saqlandi: ummmusfira (0 ta media)
+[2025-10-23 11:52:30] Bot ishga tushdi.
+[2025-10-23 11:52:42] Instaloader sessiya fayli yuklandi.
+[2025-10-23 11:52:48] Postlar olinayotganda xato: JSON Query to graphql/query: 401 Unauthorized - "fail" status, message "Please wait a few minutes before you try again." when accessing https://www.instagram.com/graphql/query?variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22ummmusfira%22%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Afalse%7D&doc_id=7898261790222653&server_timestamps=true
+[2025-10-23 11:52:48] Kesh saqlandi: ummmusfira (0 ta media)
+[2025-10-23 11:54:01] Session fayl topildi, yuklanmoqda...
+[2025-10-23 11:54:04] Instagram sessiya orqali login muvaffaqiyatli!
+[2025-10-23 11:54:04] Bot ishga tushdi.
+[2025-10-23 11:54:16] Kesh saqlandi: ummmusfira (3 ta post)
+[2025-10-23 11:54:34] Kesh saqlandi: yasubiy.film (10 ta post)
+[2025-10-23 11:55:58] Kesh saqlandi: marsatik (200 ta post)

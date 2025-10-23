@@ -1,0 +1,300 @@
+import os
+import csv
+import asyncio
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from datetime import datetime, timedelta
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import InputFile, ReplyKeyboardMarkup, KeyboardButton
+from instagrapi import Client
+from instagrapi.exceptions import LoginRequired
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+IG_USERNAME = os.getenv("IG_USERNAME")
+IG_PASSWORD = os.getenv("IG_PASSWORD")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "instagram_bot")
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+DB_PORT = os.getenv("DB_PORT", "5432")
+
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher(bot)
+cl = Client()
+cl.delay_range = [2, 4]
+
+# ==================== DATABASE ====================
+def get_db_connection():
+    return psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        port=DB_PORT
+    )
+
+def init_db():
+    """Initialize database with phone_number column"""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS users (
+        user_id BIGINT PRIMARY KEY,
+        telegram_username TEXT,
+        phone_number TEXT,
+        requests_used INTEGER DEFAULT 0,
+        requests_limit INTEGER DEFAULT 5,
+        reset_date TIMESTAMP DEFAULT NOW(),
+        created_at TIMESTAMP DEFAULT NOW()
+    )''')
+    conn.commit()
+    conn.close()
+
+def create_user(user_id, telegram_username, phone_number=None):
+    """Create or update user record"""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute('''
+        INSERT INTO users (user_id, telegram_username, phone_number, requests_used, requests_limit, reset_date)
+        VALUES (%s, %s, %s, 0, 5, NOW())
+        ON CONFLICT (user_id) DO UPDATE
+        SET telegram_username = EXCLUDED.telegram_username,
+            phone_number = COALESCE(EXCLUDED.phone_number, users.phone_number)
+    ''', (user_id, telegram_username, phone_number))
+    conn.commit()
+    conn.close()
+
+def get_user(user_id):
+    conn = get_db_connection()
+    c = conn.cursor(cursor_factory=RealDictCursor)
+    c.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
+    row = c.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def check_reset_needed(user_id):
+    conn = get_db_connection()
+    c = conn.cursor(cursor_factory=RealDictCursor)
+    c.execute("SELECT reset_date FROM users WHERE user_id=%s", (user_id,))
+    row = c.fetchone()
+    if row:
+        reset_date = row['reset_date']
+        if not reset_date or datetime.now() > (reset_date + timedelta(days=1)):
+            c.execute('''UPDATE users SET requests_used = 0, reset_date = NOW() WHERE user_id=%s''', (user_id,))
+            conn.commit()
+    conn.close()
+
+def increment_request(user_id):
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("UPDATE users SET requests_used = requests_used + 1 WHERE user_id=%s", (user_id,))
+    conn.commit()
+    conn.close()
+
+# ==================== INSTAGRAM ====================
+def insta_login():
+    """Instagram login with reliable session handling"""
+    session_file = "session.json"
+    try:
+        if os.path.exists(session_file):
+            print("📂 Session fayl topildi, yuklanmoqda...")
+            cl.load_settings(session_file)
+            try:
+                cl.login(IG_USERNAME, IG_PASSWORD)
+                cl.get_timeline_feed()
+                print("✅ Instagram sessiya orqali login muvaffaqiyatli!")
+                return
+            except LoginRequired:
+                print("⚠️ Session eskirgan. Yangilanyapti...")
+                os.remove(session_file)
+
+        # Agar session yo'q yoki eskirgan bo'lsa
+        print("🔐 Yangi login amalga oshirilmoqda...")
+        cl.login(IG_USERNAME, IG_PASSWORD)
+        cl.dump_settings(session_file)
+        print("✅ Yangi session saqlandi!")
+
+    except Exception as e:
+        if "challenge_required" in str(e):
+            print("⚠️ Instagram challenge chiqdi (tasdiqlash talab qilinmoqda).")
+            print("➡️ Iltimos, telefon yoki email orqali kirib, tasdiqlang, so‘ng botni qayta ishga tushiring.")
+        else:
+            print(f"❌ Login xatoligi: {e}")
+        exit(1)
+
+
+def calculate_virality(likes, comments, views):
+    if views == 0:
+        return 0
+    engagement = likes + comments
+    return round((engagement / views) * 100, 2)
+
+# ==================== BOT HANDLERS ====================
+
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    user_id = message.from_user.id
+    username = message.from_user.username or "Foydalanuvchi"
+
+    user = get_user(user_id)
+
+    # Agar foydalanuvchi hali ro'yxatdan o'tmagan yoki telefon raqami yo'q bo'lsa
+    if not user or not user.get("phone_number"):
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        contact_btn = types.KeyboardButton("📞 Telefon raqamni yuborish", request_contact=True)
+        keyboard.add(contact_btn)
+
+        await message.reply(
+            "🚀 **Instagram Tahlil Botiga xush kelibsiz!**\n\n"
+            "Bu bot **targetologlar**, **SMM mutaxassislari**, va **kontent yaratuvchilar** uchun mo‘ljallangan. "
+            "U sizga istalgan Instagram akkauntini tahlil qilib, "
+            "**eng muvaffaqiyatli post va reelslarni** aniqlashda yordam beradi.\n\n"
+            "📊 Natijada siz **detal statistikani CSV fayl** ko‘rinishida olasiz — bu ma’lumotlar orqali "
+            "kontent strategiyangizni yanada yaxshilashingiz mumkin.\n\n"
+            "📱 Botdan foydalanish uchun avval **ro‘yxatdan o‘tish** zarur. "
+            "Buning uchun pastdagi tugma orqali **telefon raqamingizni yuboring** 👇",
+            parse_mode="Markdown",
+            reply_markup=keyboard
+        )
+        return
+
+    # Agar foydalanuvchi allaqachon ro'yxatdan o'tgan bo'lsa
+    await message.reply(
+        "✅ Siz allaqachon ro‘yxatdan o‘tgan ekansiz!\n\n"
+        "Endi faqat username yuboring (masalan: `ummmusfira`) va bot siz uchun "
+        "**Instagram tahlilini** CSV ko‘rinishida tayyorlaydi 📊",
+        parse_mode="Markdown"
+    )
+
+@dp.message_handler(content_types=types.ContentType.CONTACT)
+async def contact_handler(message: types.Message):
+    user_id = message.from_user.id
+    phone_number = message.contact.phone_number
+    username = message.from_user.username or "Foydalanuvchi"
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    try:
+        # Jadvalda faqat mavjud ustunlarni ishlatamiz
+        c.execute('''
+            INSERT INTO users (user_id, telegram_username, phone_number, requests_used, requests_limit, reset_date)
+            VALUES (%s, %s, %s, 0, 5, NOW())
+            ON CONFLICT (user_id) DO UPDATE 
+            SET telegram_username = EXCLUDED.telegram_username,
+                phone_number = EXCLUDED.phone_number
+        ''', (user_id, username, phone_number))
+        conn.commit()
+    finally:
+        conn.close()
+
+    await message.reply(
+        "🎉 Muvaffaqiyatli ro‘yxatdan o‘tildi!\n\n"
+        "Endi siz botdan to‘liq foydalanishingiz mumkin.\n\n"
+        "📥 Username yuboring (masalan: `ummmusfira`), biz esa siz uchun "
+        "**eng samarali postlar va reelslar** bo‘yicha tahlil tayyorlaymiz!",
+        parse_mode="Markdown",
+        reply_markup=types.ReplyKeyboardRemove()
+    )
+
+@dp.message_handler(commands=['balance'])
+async def show_balance(message: types.Message):
+    user_id = message.from_user.id
+    check_reset_needed(user_id)
+    user = get_user(user_id)
+    if not user:
+        await message.reply("❌ Avval /start bilan ro‘yxatdan o‘ting.")
+        return
+    remaining = user['requests_limit'] - user['requests_used']
+    if remaining < 0:
+        remaining = 0
+    await message.reply(
+        f"📊 Kunlik limit: {user['requests_used']}/{user['requests_limit']}\n"
+        f"Qolgan: {remaining}"
+    )
+
+@dp.message_handler()
+async def analyze_user(message: types.Message):
+    user_id = message.from_user.id
+    username_input = message.text.strip().lstrip('@')
+
+    if not username_input or ' ' in username_input:
+        await message.reply("❗ To‘g‘ri username kiriting, masalan: ummmusfira")
+        return
+
+    user = get_user(user_id)
+    if not user or not user.get("phone_number"):
+        await message.reply("📞 Avval /start ni bosib raqamingizni yuboring.")
+        return
+
+    check_reset_needed(user_id)
+    remaining = user['requests_limit'] - user['requests_used']
+    if remaining <= 0:
+        await message.reply("❌ Kunlik limit tugagan. Ertaga yana urinib ko‘ring.")
+        return
+
+    status_msg = await message.reply(f"🔍 @{username_input} tahlil qilinmoqda... (qolgan: {remaining})")
+    try:
+        user_id_ig = cl.user_id_from_username(username_input)
+        user_info = cl.user_info(user_id_ig)
+        total_posts = getattr(user_info, 'media_count', 0)
+
+        await status_msg.edit_text(f"✅ @{username_input} topildi — {total_posts} post. CSV tayyorlanmoqda...")
+
+        amount = min(total_posts, 50)
+        medias = cl.user_medias_v1(user_id_ig, amount=amount)
+        if not medias:
+            await message.reply("❌ Postlar yuklanmadi.")
+            return
+
+        filename = f"{username_input}_top50.csv"
+        with open(filename, "w", newline='', encoding='utf-8-sig') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                "Link", "Ko‘rishlar", "Layklar", "Kommentlar",
+                "Viral (%)", "Turi", "Sana", "Tavsif"
+            ])
+            for m in medias:
+                likes = getattr(m, 'like_count', 0)
+                comments = getattr(m, 'comment_count', 0)
+                views = getattr(m, 'video_view_count', 0) or getattr(m, 'view_count', 0) or likes
+                virality = calculate_virality(likes, comments, views)
+                media_type = "Reels" if getattr(m, 'media_type', 1) == 2 else "Post"
+                caption = (getattr(m, 'caption_text', '') or '')[:200]
+                date_str = getattr(m, 'taken_at', None)
+                date_str = date_str.strftime("%Y-%m-%d %H:%M:%S") if date_str else ''
+                writer.writerow([
+                    f"https://www.instagram.com/p/{getattr(m, 'code', '')}/",
+                    views, likes, comments, virality, media_type, date_str, caption
+                ])
+
+        increment_request(user_id)
+        new_user = get_user(user_id)
+        new_remaining = new_user['requests_limit'] - new_user['requests_used']
+        if new_remaining < 0:
+            new_remaining = 0
+
+        await message.reply_document(
+            InputFile(filename),
+            caption=(
+                f"✅ Top {len(medias)} kontent: @{username_input}\n"
+                f"📊 Qolgan: {new_remaining}/{new_user['requests_limit']}"
+            )
+        )
+
+        os.remove(filename)
+
+    except LoginRequired:
+        await message.reply("⏳ Session tugagan, qayta login qilinmoqda...")
+        insta_login()
+        await message.reply("🔁 Iltimos, username ni yana yuboring (qayta login qilindi).")
+    except Exception as e:
+        await message.reply(f"⚠️ Xatolik: {str(e)[:200]}")
+
+# ==================== RUN ====================
+if __name__ == '__main__':
+    init_db()
+    insta_login()
+    print("🤖 Bot ishga tushdi...")
+    asyncio.run(dp.start_polling())
